@@ -35,17 +35,32 @@ export const debounce = (func, wait) => {
 
 // Filter workouts by preferences
 export const filterWorkoutsByPreferences = (workouts, preferences) => {
-  if (!preferences || !workouts) return workouts
+  if (!preferences || !workouts || workouts.length === 0) {
+    console.log('No filtering - missing preferences or workouts')
+    return workouts || []
+  }
 
-  return workouts.filter(workout => {
+  console.log('Filtering workouts with preferences:', preferences)
+  console.log('Total workouts before filter:', workouts.length)
+
+  const filtered = workouts.filter(workout => {
     // Filter by sensory level if specified
     if (preferences.sensory_level && workout.sensory_level) {
       const userSensory = preferences.sensory_level.toLowerCase()
       const workoutSensory = workout.sensory_level.toLowerCase()
       
       // Allow workouts that match or are lower sensory
-      if (userSensory === 'low' && workoutSensory !== 'low') return false
-      if (userSensory === 'medium' && workoutSensory === 'high') return false
+      // Low users: only low workouts
+      // Medium users: low or medium workouts
+      // High users: all workouts
+      if (userSensory === 'low' && workoutSensory !== 'low') {
+        console.log(`Filtered out ${workout.title}: sensory mismatch (user: ${userSensory}, workout: ${workoutSensory})`)
+        return false
+      }
+      if (userSensory === 'medium' && workoutSensory === 'high') {
+        console.log(`Filtered out ${workout.title}: sensory mismatch (user: ${userSensory}, workout: ${workoutSensory})`)
+        return false
+      }
     }
 
     // Filter by equipment if specified
@@ -53,11 +68,18 @@ export const filterWorkoutsByPreferences = (workouts, preferences) => {
       const userEquipment = preferences.equipment.toLowerCase()
       const workoutEquipment = workout.equipment.toLowerCase()
       
-      if (userEquipment === 'none' && workoutEquipment !== 'none') return false
+      // If user has no equipment, only show workouts that need no equipment
+      if (userEquipment === 'none' && workoutEquipment !== 'none') {
+        console.log(`Filtered out ${workout.title}: equipment mismatch (user: ${userEquipment}, workout: ${workoutEquipment})`)
+        return false
+      }
     }
 
     return true
   })
+
+  console.log('Workouts after filtering:', filtered.length)
+  return filtered
 }
 
 // Get sensory level color

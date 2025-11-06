@@ -8,9 +8,11 @@ function Onboarding() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [formData, setFormData] = useState({
+    name: '',
     sensory_level: '',
     energy_level: '',
     environment: '',
+    fitness_goal: '',
     workout_time: '',
     equipment: '',
     special_considerations: '',
@@ -118,6 +120,83 @@ function Onboarding() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Name */}
+            <div>
+              <label 
+                htmlFor="name"
+                className="block text-base font-semibold text-calm-900 mb-3"
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+                placeholder="Enter your name"
+                required
+                className="w-full px-4 py-3 rounded-lg border border-calm-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
+              />
+            </div>
+
+            {/* Fitness Goal */}
+            <div>
+              <label className="block text-base font-semibold text-calm-900 mb-4">
+                Fitness Goal
+              </label>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <OptionCard
+                  name="fitness_goal"
+                  value="strength"
+                  label="Build Strength"
+                  description="Increase muscle strength"
+                  selected={formData.fitness_goal}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="fitness_goal"
+                  value="flexibility"
+                  label="Improve Flexibility"
+                  description="Increase range of motion"
+                  selected={formData.fitness_goal}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="fitness_goal"
+                  value="endurance"
+                  label="Build Endurance"
+                  description="Improve cardiovascular fitness"
+                  selected={formData.fitness_goal}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="fitness_goal"
+                  value="wellness"
+                  label="General Wellness"
+                  description="Maintain overall health"
+                  selected={formData.fitness_goal}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="fitness_goal"
+                  value="stress"
+                  label="Stress Relief"
+                  description="Reduce anxiety and tension"
+                  selected={formData.fitness_goal}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="fitness_goal"
+                  value="routine"
+                  label="Build Routine"
+                  description="Establish consistent habits"
+                  selected={formData.fitness_goal}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
             {/* Sensory Level */}
             <div>
               <label className="block text-base font-semibold text-calm-900 mb-4">
@@ -307,7 +386,7 @@ function Onboarding() {
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <button
                 type="submit"
-                disabled={loading || !formData.sensory_level || !formData.energy_level || !formData.environment || !formData.workout_time || !formData.equipment}
+                disabled={loading || !formData.name || !formData.sensory_level || !formData.energy_level || !formData.environment || !formData.fitness_goal || !formData.workout_time || !formData.equipment}
                 className="flex-1 bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Saving...' : 'Save Preferences'}

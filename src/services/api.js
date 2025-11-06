@@ -127,6 +127,7 @@ export const progress = {
       .from('progress')
       .select('*', { count: 'exact', head: false })
       .eq('user_id', userId)
+      .order('completed_at', { ascending: false })
     
     if (error) return { stats: null, error }
     
@@ -138,10 +139,42 @@ export const progress = {
       return completedDate >= weekAgo
     }).length || 0
 
+    // Calculate streak
+    let streak = 0
+    if (data && data.length > 0) {
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      
+      let checkDate = new Date(today)
+      let foundToday = false
+      
+      for (let i = 0; i < data.length; i++) {
+        const completedDate = new Date(data[i].completed_at)
+        completedDate.setHours(0, 0, 0, 0)
+        
+        const daysDiff = Math.floor((checkDate - completedDate) / (1000 * 60 * 60 * 24))
+        
+        if (daysDiff === 0 && !foundToday) {
+          foundToday = true
+          streak++
+          checkDate.setDate(checkDate.getDate() - 1)
+        } else if (daysDiff === 1) {
+          streak++
+          checkDate.setDate(checkDate.getDate() - 1)
+        } else if (daysDiff > 1) {
+          break
+        }
+      }
+    }
+
+    const lastCompleted = data && data.length > 0 ? data[0].completed_at : null
+
     return {
       stats: {
         totalWorkouts,
         thisWeek,
+        streak,
+        lastCompleted,
       },
       error: null,
     }

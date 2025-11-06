@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { progress } from '../services/api'
 import { formatDate } from '../utils/helpers'
 
-function ProgressTracker({ userId }) {
-  const [stats, setStats] = useState({ totalWorkouts: 0, thisWeek: 0 })
+function ProgressTracker({ userId, onWorkoutComplete }) {
+  const [stats, setStats] = useState({ totalWorkouts: 0, thisWeek: 0, streak: 0, lastCompleted: null })
   const [recentWorkouts, setRecentWorkouts] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -29,7 +29,7 @@ function ProgressTracker({ userId }) {
     // Refresh every 30 seconds to catch new completions
     const interval = setInterval(loadProgress, 30000)
     return () => clearInterval(interval)
-  }, [userId])
+  }, [userId, onWorkoutComplete])
 
   if (loading) {
     return (
@@ -57,6 +57,13 @@ function ProgressTracker({ userId }) {
 
         <div>
           <div className="flex justify-between items-center mb-2">
+            <span className="text-sm text-calm-600">Current Streak</span>
+            <span className="text-xl font-semibold text-primary-600">{stats.streak} {stats.streak === 1 ? 'day' : 'days'}</span>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-calm-600">This Week</span>
             <span className="text-xl font-semibold text-calm-900">{stats.thisWeek}</span>
           </div>
@@ -71,6 +78,14 @@ function ProgressTracker({ userId }) {
             ></div>
           </div>
         </div>
+
+        {stats.lastCompleted && (
+          <div>
+            <div className="text-xs text-calm-500">
+              Last completed: {formatDate(stats.lastCompleted)}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Recent Workouts */}

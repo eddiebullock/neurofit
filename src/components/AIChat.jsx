@@ -16,7 +16,7 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true, // Note: In production, use a backend proxy
 })
 
-function AIChat({ userPreferences, workouts }) {
+function AIChat({ userPreferences, workouts, recentActivity }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
@@ -68,19 +68,19 @@ function AIChat({ userPreferences, workouts }) {
 
       switch (intent) {
         case 'motivation':
-          prompt = getMotivationPrompt(userMessage, userPreferences)
+          prompt = getMotivationPrompt(userMessage, userPreferences, recentActivity)
           break
         case 'sensory':
-          prompt = getSensoryOverloadPrompt(userMessage, userPreferences)
+          prompt = getSensoryOverloadPrompt(userMessage, userPreferences, recentActivity)
           break
         case 'executive':
-          prompt = getExecutiveFunctionPrompt(userMessage, userPreferences)
+          prompt = getExecutiveFunctionPrompt(userMessage, userPreferences, recentActivity)
           break
         case 'workout':
-          prompt = getWorkoutRecommendationPrompt(userMessage, userPreferences, workouts)
+          prompt = getWorkoutRecommendationPrompt(userMessage, userPreferences, workouts, recentActivity)
           break
         default:
-          prompt = getWorkoutRecommendationPrompt(userMessage, userPreferences, workouts)
+          prompt = getWorkoutRecommendationPrompt(userMessage, userPreferences, workouts, recentActivity)
       }
 
       const completion = await openai.chat.completions.create({
@@ -112,7 +112,7 @@ function AIChat({ userPreferences, workouts }) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-calm-200 flex flex-col h-[600px]">
+    <div className="bg-white rounded-lg shadow-sm border border-calm-200 flex flex-col h-[600px]" data-ai-chat>
       <div className="p-4 border-b border-calm-200">
         <h2 className="text-xl font-bold text-calm-900">AI Coach</h2>
         <p className="text-sm text-calm-600">Your supportive fitness companion</p>

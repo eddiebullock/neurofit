@@ -18,12 +18,14 @@ You help users with:
 
 Always acknowledge challenges without judgment and offer practical, actionable advice.`
 
-export const getUserContextPrompt = (preferences) => {
+export const getUserContextPrompt = (preferences, recentActivity) => {
   if (!preferences) {
     return 'The user has not yet completed their preferences questionnaire.'
   }
 
-  return `User Preferences:
+  let context = `User Profile:
+- Name: ${preferences.name || 'not specified'}
+- Fitness Goal: ${preferences.fitness_goal || 'not specified'}
 - Sensory Level: ${preferences.sensory_level || 'not specified'}
 - Energy Level: ${preferences.energy_level || 'not specified'}
 - Preferred Environment: ${preferences.environment || 'not specified'}
@@ -31,10 +33,20 @@ export const getUserContextPrompt = (preferences) => {
 - Equipment Available: ${preferences.equipment || 'not specified'}
 - Special Considerations: ${preferences.special_considerations || 'none'}
 `
+
+  if (recentActivity && recentActivity.length > 0) {
+    context += `\nRecent Activity:\n`
+    recentActivity.slice(0, 5).forEach((item, idx) => {
+      const date = new Date(item.completed_at).toLocaleDateString()
+      context += `- ${item.workouts?.title || 'Workout'} completed on ${date}\n`
+    })
+  }
+
+  return context
 }
 
-export const getWorkoutRecommendationPrompt = (userMessage, preferences, availableWorkouts) => {
-  const context = getUserContextPrompt(preferences)
+export const getWorkoutRecommendationPrompt = (userMessage, preferences, availableWorkouts, recentActivity) => {
+  const context = getUserContextPrompt(preferences, recentActivity)
   const workoutsList = availableWorkouts?.map(w => 
     `- ${w.title}: ${w.description} (${w.duration} min, sensory level: ${w.sensory_level})`
   ).join('\n') || 'No workouts available yet.'
@@ -55,8 +67,8 @@ Provide a helpful, supportive response that:
 4. Keeps the response concise and actionable`
 }
 
-export const getMotivationPrompt = (userMessage, preferences) => {
-  const context = getUserContextPrompt(preferences)
+export const getMotivationPrompt = (userMessage, preferences, recentActivity) => {
+  const context = getUserContextPrompt(preferences, recentActivity)
   
   return `${systemPrompt}
 
@@ -72,8 +84,8 @@ The user seems to be struggling with motivation or energy. Provide:
 5. Keep it brief and supportive`
 }
 
-export const getSensoryOverloadPrompt = (userMessage, preferences) => {
-  const context = getUserContextPrompt(preferences)
+export const getSensoryOverloadPrompt = (userMessage, preferences, recentActivity) => {
+  const context = getUserContextPrompt(preferences, recentActivity)
   
   return `${systemPrompt}
 
@@ -89,8 +101,8 @@ The user may be experiencing sensory overload. Provide:
 5. Options for when they're ready to try again`
 }
 
-export const getExecutiveFunctionPrompt = (userMessage, preferences) => {
-  const context = getUserContextPrompt(preferences)
+export const getExecutiveFunctionPrompt = (userMessage, preferences, recentActivity) => {
+  const context = getUserContextPrompt(preferences, recentActivity)
   
   return `${systemPrompt}
 
