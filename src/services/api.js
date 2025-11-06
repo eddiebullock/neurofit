@@ -41,7 +41,7 @@ export const auth = {
 export const userPreferences = {
   save: async (userId, preferences) => {
     const { data, error } = await supabase
-      .from('user_preferences')
+      .from('profiles')
       .upsert({
         user_id: userId,
         ...preferences,
@@ -52,7 +52,7 @@ export const userPreferences = {
 
   get: async (userId) => {
     const { data, error } = await supabase
-      .from('user_preferences')
+      .from('profiles')
       .select('*')
       .eq('user_id', userId)
       .single()
@@ -101,7 +101,7 @@ export const workouts = {
 export const progress = {
   logWorkout: async (userId, workoutId) => {
     const { data, error } = await supabase
-      .from('workout_progress')
+      .from('progress')
       .insert({
         user_id: userId,
         workout_id: workoutId,
@@ -112,7 +112,7 @@ export const progress = {
 
   getUserProgress: async (userId) => {
     const { data, error } = await supabase
-      .from('workout_progress')
+      .from('progress')
       .select(`
         *,
         workouts (*)
@@ -124,7 +124,7 @@ export const progress = {
 
   getStats: async (userId) => {
     const { data, error } = await supabase
-      .from('workout_progress')
+      .from('progress')
       .select('*', { count: 'exact', head: false })
       .eq('user_id', userId)
     

@@ -27,8 +27,7 @@ function Onboarding() {
     checkUser()
   }, [navigate])
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
+  const handleChange = (name, value) => {
     setFormData(prev => ({
       ...prev,
       [name]: value,
@@ -64,188 +63,268 @@ function Onboarding() {
     }
   }
 
+  const OptionCard = ({ name, value, label, description, selected, onChange }) => (
+    <button
+      type="button"
+      onClick={() => onChange(name, value)}
+      className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+        selected === value
+          ? 'border-primary-500 bg-primary-50'
+          : 'border-calm-200 bg-white hover:border-calm-300 hover:bg-calm-50'
+      }`}
+    >
+      <div className="flex items-start">
+        <div className={`flex-shrink-0 w-5 h-5 rounded-full border-2 mt-0.5 mr-3 flex items-center justify-center ${
+          selected === value ? 'border-primary-600 bg-primary-600' : 'border-calm-300'
+        }`}>
+          {selected === value && (
+            <div className="w-2 h-2 rounded-full bg-white"></div>
+          )}
+        </div>
+        <div className="flex-1">
+          <div className={`font-medium ${selected === value ? 'text-primary-900' : 'text-calm-900'}`}>
+            {label}
+          </div>
+          {description && (
+            <div className={`text-sm mt-1 ${selected === value ? 'text-primary-700' : 'text-calm-600'}`}>
+              {description}
+            </div>
+          )}
+        </div>
+      </div>
+    </button>
+  )
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-calm-50">
       <Header />
       
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-3xl sm:text-4xl font-bold text-calm-900 mb-2">
-          Welcome to NeuroFit
-        </h1>
-        <p className="text-lg text-calm-700 mb-8">
-          Let's customize your fitness experience. This will help us recommend workouts that work for you.
-        </p>
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="bg-white rounded-lg shadow-sm border border-calm-200 p-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-calm-900 mb-2">
+            Welcome to NeuroFit
+          </h1>
+          <p className="text-lg text-calm-700 mb-8">
+            Let's customize your fitness experience. This will help us recommend workouts that work for you.
+          </p>
 
-        {error && (
-          <div 
-            className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6"
-            role="alert"
-          >
-            <p className="text-red-800 text-sm">{error}</p>
-          </div>
-        )}
+          {error && (
+            <div 
+              className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6"
+              role="alert"
+            >
+              <p className="text-red-800 text-sm">{error}</p>
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Sensory Level */}
-          <div>
-            <label 
-              htmlFor="sensory_level"
-              className="block text-sm font-medium text-calm-700 mb-2"
-            >
-              Sensory Sensitivity Level
-            </label>
-            <select
-              id="sensory_level"
-              name="sensory_level"
-              value={formData.sensory_level}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-lg border border-calm-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
-            >
-              <option value="">Select...</option>
-              <option value="low">Low - Comfortable with various stimuli</option>
-              <option value="medium">Medium - Some sensitivity to noise/brightness</option>
-              <option value="high">High - Need quiet, calm environments</option>
-            </select>
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Sensory Level */}
+            <div>
+              <label className="block text-base font-semibold text-calm-900 mb-4">
+                Sensory Sensitivity Level
+              </label>
+              <div className="space-y-3">
+                <OptionCard
+                  name="sensory_level"
+                  value="low"
+                  label="Low"
+                  description="Comfortable with various stimuli"
+                  selected={formData.sensory_level}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="sensory_level"
+                  value="medium"
+                  label="Medium"
+                  description="Some sensitivity to noise or brightness"
+                  selected={formData.sensory_level}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="sensory_level"
+                  value="high"
+                  label="High"
+                  description="Need quiet, calm environments"
+                  selected={formData.sensory_level}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
 
-          {/* Energy Level */}
-          <div>
-            <label 
-              htmlFor="energy_level"
-              className="block text-sm font-medium text-calm-700 mb-2"
-            >
-              Typical Energy Level
-            </label>
-            <select
-              id="energy_level"
-              name="energy_level"
-              value={formData.energy_level}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-lg border border-calm-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
-            >
-              <option value="">Select...</option>
-              <option value="high">High - Can handle intense workouts</option>
-              <option value="medium">Medium - Moderate intensity preferred</option>
-              <option value="low">Low - Gentle, low-intensity preferred</option>
-            </select>
-          </div>
+            {/* Energy Level */}
+            <div>
+              <label className="block text-base font-semibold text-calm-900 mb-4">
+                Typical Energy Level
+              </label>
+              <div className="space-y-3">
+                <OptionCard
+                  name="energy_level"
+                  value="high"
+                  label="High"
+                  description="Can handle intense workouts"
+                  selected={formData.energy_level}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="energy_level"
+                  value="medium"
+                  label="Medium"
+                  description="Moderate intensity preferred"
+                  selected={formData.energy_level}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="energy_level"
+                  value="low"
+                  label="Low"
+                  description="Gentle, low-intensity preferred"
+                  selected={formData.energy_level}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
 
-          {/* Environment */}
-          <div>
-            <label 
-              htmlFor="environment"
-              className="block text-sm font-medium text-calm-700 mb-2"
-            >
-              Preferred Workout Environment
-            </label>
-            <select
-              id="environment"
-              name="environment"
-              value={formData.environment}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-lg border border-calm-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
-            >
-              <option value="">Select...</option>
-              <option value="home">Home - Private, controlled space</option>
-              <option value="outdoor">Outdoor - Nature, fresh air</option>
-              <option value="gym">Gym - Structured facility</option>
-              <option value="flexible">Flexible - Anywhere works</option>
-            </select>
-          </div>
+            {/* Environment */}
+            <div>
+              <label className="block text-base font-semibold text-calm-900 mb-4">
+                Preferred Workout Environment
+              </label>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <OptionCard
+                  name="environment"
+                  value="home"
+                  label="Home"
+                  description="Private, controlled space"
+                  selected={formData.environment}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="environment"
+                  value="outdoor"
+                  label="Outdoor"
+                  description="Nature, fresh air"
+                  selected={formData.environment}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="environment"
+                  value="gym"
+                  label="Gym"
+                  description="Structured facility"
+                  selected={formData.environment}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="environment"
+                  value="flexible"
+                  label="Flexible"
+                  description="Anywhere works"
+                  selected={formData.environment}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
 
-          {/* Workout Time */}
-          <div>
-            <label 
-              htmlFor="workout_time"
-              className="block text-sm font-medium text-calm-700 mb-2"
-            >
-              Preferred Workout Duration
-            </label>
-            <select
-              id="workout_time"
-              name="workout_time"
-              value={formData.workout_time}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-lg border border-calm-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
-            >
-              <option value="">Select...</option>
-              <option value="10">10 minutes</option>
-              <option value="15">15 minutes</option>
-              <option value="20">20 minutes</option>
-              <option value="30">30 minutes</option>
-              <option value="45">45 minutes</option>
-              <option value="60">60+ minutes</option>
-            </select>
-          </div>
+            {/* Workout Time */}
+            <div>
+              <label className="block text-base font-semibold text-calm-900 mb-4">
+                Preferred Workout Duration
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {['10', '15', '20', '30', '45', '60'].map((time) => (
+                  <OptionCard
+                    key={time}
+                    name="workout_time"
+                    value={time}
+                    label={time === '60' ? '60+ minutes' : `${time} minutes`}
+                    selected={formData.workout_time}
+                    onChange={handleChange}
+                  />
+                ))}
+              </div>
+            </div>
 
-          {/* Equipment */}
-          <div>
-            <label 
-              htmlFor="equipment"
-              className="block text-sm font-medium text-calm-700 mb-2"
-            >
-              Available Equipment
-            </label>
-            <select
-              id="equipment"
-              name="equipment"
-              value={formData.equipment}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-lg border border-calm-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
-            >
-              <option value="">Select...</option>
-              <option value="none">None - Bodyweight only</option>
-              <option value="basic">Basic - Resistance bands, dumbbells</option>
-              <option value="moderate">Moderate - Some gym equipment</option>
-              <option value="full">Full - Access to full gym</option>
-            </select>
-          </div>
+            {/* Equipment */}
+            <div>
+              <label className="block text-base font-semibold text-calm-900 mb-4">
+                Available Equipment
+              </label>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <OptionCard
+                  name="equipment"
+                  value="none"
+                  label="None"
+                  description="Bodyweight only"
+                  selected={formData.equipment}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="equipment"
+                  value="basic"
+                  label="Basic"
+                  description="Resistance bands, dumbbells"
+                  selected={formData.equipment}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="equipment"
+                  value="moderate"
+                  label="Moderate"
+                  description="Some gym equipment"
+                  selected={formData.equipment}
+                  onChange={handleChange}
+                />
+                <OptionCard
+                  name="equipment"
+                  value="full"
+                  label="Full"
+                  description="Access to full gym"
+                  selected={formData.equipment}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
 
-          {/* Special Considerations */}
-          <div>
-            <label 
-              htmlFor="special_considerations"
-              className="block text-sm font-medium text-calm-700 mb-2"
-            >
-              Special Considerations (Optional)
-            </label>
-            <textarea
-              id="special_considerations"
-              name="special_considerations"
-              value={formData.special_considerations}
-              onChange={handleChange}
-              rows={4}
-              placeholder="Any specific needs, limitations, or preferences we should know about?"
-              className="w-full px-4 py-3 rounded-lg border border-calm-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-            />
-          </div>
+            {/* Special Considerations */}
+            <div>
+              <label 
+                htmlFor="special_considerations"
+                className="block text-base font-semibold text-calm-900 mb-3"
+              >
+                Special Considerations (Optional)
+              </label>
+              <textarea
+                id="special_considerations"
+                name="special_considerations"
+                value={formData.special_considerations}
+                onChange={(e) => handleChange('special_considerations', e.target.value)}
+                rows={4}
+                placeholder="Any specific needs, limitations, or preferences we should know about?"
+                className="w-full px-4 py-3 rounded-lg border border-calm-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none bg-white"
+              />
+            </div>
 
-          <div className="flex gap-4">
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Saving...' : 'Save Preferences'}
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/dashboard')}
-              className="px-6 py-3 rounded-lg border border-calm-300 text-calm-700 hover:bg-calm-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors"
-            >
-              Skip for Now
-            </button>
-          </div>
-        </form>
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <button
+                type="submit"
+                disabled={loading || !formData.sensory_level || !formData.energy_level || !formData.environment || !formData.workout_time || !formData.equipment}
+                className="flex-1 bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Saving...' : 'Save Preferences'}
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/dashboard')}
+                className="px-6 py-3 rounded-lg border border-calm-300 text-calm-700 hover:bg-calm-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors"
+              >
+                Skip for Now
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   )
 }
 
 export default Onboarding
-

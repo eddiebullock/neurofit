@@ -84,7 +84,7 @@ function AIChat({ userPreferences, workouts }) {
       }
 
       const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini', // Using gpt-4o-mini - the cheapest model. DO NOT CHANGE.
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: userMessage },
