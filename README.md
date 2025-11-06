@@ -1,33 +1,40 @@
 # NeuroFit
 
-A project for neuroimaging data analysis and processing.
-
 ## Description
 
-This repository contains tools and scripts for neuroimaging data manipulation and analysis.
+NeuroFit is a neurodivergent-friendly fitness platform. This repository contains the landing page for the startup.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Python 3.x
-- Required Python packages (see requirements.txt)
+- Node.js 18+ and npm
 
 ### Installation
 
 ```bash
-pip install -r requirements.txt
+npm install
 ```
 
-## Usage
+### Development
 
-[Add usage instructions here]
+```bash
+npm run dev
+```
 
-## Contributing
+This will start the development server, typically at `http://localhost:5173`
 
-[Add contribution guidelines here]
+### Build
 
-## License
+```bash
+npm run build
+```
 
-[Add license information here]
+This creates a production build in the `dist` directory.
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
 
